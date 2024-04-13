@@ -11,13 +11,19 @@ const bot = mineflayer.createBot(settings);
 
 bot.once("spawn", () => {
     bot.chat("Hello!");
+    bot.setControlState("sprint", true);
+    bot.setControlState("jump", true);
 })
 
 bot.on("move", ()=> {
-    let friend = bot.nearestEntity();
+    let entity = bot.nearestEntity(e => e.isValid && (e.type == 'mob' || e.type == 'player'));
+    
+    if (entity) {
+        if (entity.isValid) {
+            bot.lookAt(entity.position.offset(0, entity.height, 0)); // bot looks at height of entity
 
-    if (friend) {
-        bot.lookAt(friend.position.offset(0, friend.height, 0)); // bot looks at height of entity
+            bot.attack(entity, true);
+        }
     }
 })
 
